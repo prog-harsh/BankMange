@@ -22,7 +22,7 @@ public class BankingManage {
     private static Statement stmt;
     private static String acc;
     private static Connection con;
-    
+    private static final Scanner sc = new Scanner(System.in);
     
     BankingManage(){
         try{
@@ -35,8 +35,8 @@ public class BankingManage {
             System.out.println("**Failed to connect**\nError: "+e);
         }
     }
-    static Scanner sc = new Scanner(System.in);
-    static void userPanel() throws SQLException{
+    
+    private static void userPanel() throws SQLException{
         System.out.println("----------USER PANEL----------");
         System.out.println("\n\n1. Deposit");
         System.out.println("2. Withdraw");
@@ -76,7 +76,7 @@ public class BankingManage {
                     System.out.println("Invalid Input");
             }
     }
-    static void userContinue() throws SQLException{
+    private static void userContinue() throws SQLException{
         System.out.println("Do you want to continue(y/n)");
         String c = sc.next();
         
@@ -84,7 +84,7 @@ public class BankingManage {
             userPanel();
         }
     }
-    static void deposite(int amount) throws SQLException{
+    private static void deposite(int amount) throws SQLException{
         if(amount < 500){
             System.out.println("You Cannot Depoite amount less than 500");
         }
@@ -98,7 +98,7 @@ public class BankingManage {
         }
         userContinue();
     }
-    static void withdraw(int amount) throws SQLException{
+    private static void withdraw(int amount) throws SQLException{
         if(amount>25000){
             System.out.println("You cannot withdraw amount more than 25000");
         }
@@ -111,7 +111,7 @@ public class BankingManage {
         }
         userContinue();
     }
-    static void userLogin() throws SQLException{
+    private static void userLogin() throws SQLException{
         String e_pass;
         
         System.out.println("Enter Account no.: ");
@@ -128,16 +128,15 @@ public class BankingManage {
             accno = s.getString("accno");
             pass = s.getString("pass");
             balance = Integer.parseInt(s.getString("bal"));
-            System.out.print(balance);
         }
         if(pass.equals(e_pass) && accno.equals(acc)){
             userPanel();
         }
         else{
-            System.out.println("Invalid AccountNumber/Password");
+            System.out.println("\nInvalid AccountNumber/Password");
         }
     }
-    static void adminLogin() throws SQLException{
+    private static void adminLogin() throws SQLException{
         System.out.println("------------Admin login--------------");
         String pass = "admin123";
         
@@ -146,8 +145,11 @@ public class BankingManage {
         if(e_pass.equals(pass)){
             adminPanel();
         }
+        else{
+             System.out.println("\nWrong Password...");
+        }
     }
-    static void adminContinue() throws SQLException{
+    private static void adminContinue() throws SQLException{
         System.out.println("Do you want to continue(y/n)");
         String c = sc.next();
         
@@ -155,7 +157,7 @@ public class BankingManage {
             adminPanel();
         }
     }
-    static void adminPanel() throws SQLException{
+    private static void adminPanel() throws SQLException{
         System.out.println("--------WELCOME--------\n\n");
         System.out.println("1. Add User");
         System.out.println("2. Remove User");
@@ -230,26 +232,31 @@ public class BankingManage {
             System.out.println("\n\n1. User Login");
             System.out.println("2. Admin Login");
             System.out.println("Who you are(Enter 3 for exit): ");
-            try{
-                int ch = sc.nextInt();
-                switch(ch){
-                    case 1:
-                        userLogin();
-                        break;
-                    case 2:
-                        adminLogin();
-                        break;
-                    case 3:
-                        return;
-                    default:
-                        System.out.println("Invalid Input");
-            }
-        }
-            catch(Exception InputMismatchException){
-                System.out.println("Please enter correct input...Program terminated");
-                break;
-            }
+                String ch = sc.next();
+                //here we are taking the choice in string because we don't know what user will enter
+                //extracting the first char and checking is it's ascii value is b/w 48-57(in decimal[0-9])
+                //this logic will help the program to not terminate if we give any input
+                char charc = ch.charAt(0);
+                int ascii = (int) charc;
+                if(ascii>=48 && ascii<=57){
+                    int c = Integer.parseInt(ch);
+                    switch(c){
+                        case 1:
+                            userLogin();
+                            break;
+                        case 2:
+                            adminLogin();
+                            break;
+                        case 3:
+                            return;
+                        default:
+                            System.out.println("Invalid Input");
+                    }
+                }
+                else{
+                    System.out.println("Please Enter a valid Input");
+                }
+        } 
         }
         
     }
-}
