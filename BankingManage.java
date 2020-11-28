@@ -24,6 +24,7 @@ public class BankingManage {
     private static Connection con;
     private static final Scanner sc = new Scanner(System.in);
     
+    //constructor, for mysql database connection.
     BankingManage(){
         try{
             Class.forName("com.mysql.jdbc.Driver");
@@ -99,15 +100,22 @@ public class BankingManage {
         userContinue();
     }
     private static void withdraw(int amount) throws SQLException{
+        ResultSet s = stmt.executeQuery("select bal from user where accno="+acc);
+        int bal=0;
+        while(s.next()){
+        bal = s.getInt("bal");
+        }
         if(amount>25000){
             System.out.println("You cannot withdraw amount more than 25000");
+        }
+        else if(amount>bal){
+            System.out.println("Insufficent Balance");
         }
         else if(amount<25000 && amount>0){
             balance -= amount;
             System.out.println("Amout "+amount+" withdrawed...");
             previous = -amount;
-            
-            stmt.executeUpdate("update user set bal="+String.valueOf(balance)+" where accno="+acc);
+                stmt.executeUpdate("update user set bal="+String.valueOf(balance)+" where accno="+acc);
         }
         userContinue();
     }
@@ -231,13 +239,14 @@ public class BankingManage {
             System.out.println("-------Welcome--------");
             System.out.println("\n\n1. User Login");
             System.out.println("2. Admin Login");
-            System.out.println("Who you are(Enter 3 for exit): ");
-                String ch = sc.next();
-                //here we are taking the choice in string because we don't know what user will enter
-                //extracting the first char and checking is it's ascii value is b/w 48-57(in decimal[0-9])
-                //this logic will help the program to not terminate if we give any input
-                char charc = ch.charAt(0);
-                int ascii = (int) charc;
+            System.out.println("3. Exit");
+            System.out.println("Enter your choice: ");
+            String ch = sc.next();
+            //here we are taking the choice in string because we don't know what user will enter
+            //extracting the first char and checking is it's ascii value is b/w 48-57(in decimal[0-9])
+            //this logic will help the program to not terminate if we give any input
+            char charc = ch.charAt(0);
+            int ascii = (int) charc;
                 if(ascii>=48 && ascii<=57){
                     int c = Integer.parseInt(ch);
                     switch(c){
@@ -257,6 +266,5 @@ public class BankingManage {
                     System.out.println("Please Enter a valid Input");
                 }
         } 
-        }
-        
-    }
+    }        
+}
