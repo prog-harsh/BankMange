@@ -11,6 +11,6 @@ You have to install the following setup before running-->
     
 You should create a database and table-->
     <code>CREATE DATABASE bankmanage;</code>
-          USE bankmanage;
+     <code>USE bankmanage;</code>
           CREATE TABLE user VALUES
           (accno int not null unique auto_increament, uname varchar(25), dob date, pass varchar(25) not null, mobile bigint not null);</code>
