@@ -1,18 +1,28 @@
 /*
-Credit - Harsh Tripathi
+Programmed&Developed by Harsh Tripathi
 Date = 23/11/2020
-Developed by Harsh Tripathi
 ---------------------------------
-A command Line Banking Management System java application all created goes to Myself :)
+A command Line Banking Management System java application all credit goes to Myself :)
 It uses the mySql database to store and reterive the user data. 
 **
 This project is open-source you can modify and use this if you want 
-but before using this please give me credit :)
+but please give me credit :)
 **
 
 This is under development
+You have to install the following setup before running-->
+    - JDK 8
+    - MySql 5.5
+You should create a database and table
+    <code>
+        CREATE DATABASE bankmanage;
+        USE bankmanage;
+        CREATE TABLE user VALUES
+        (accno int not null unique auto_increament, uname varchar(25), dob date, pass varchar(25) not null, mobile bigint not null);
+    <code>
 */
 
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 import java.sql.*;
 import java.util.Scanner;
 
@@ -181,28 +191,39 @@ public class BankingManage {
                 String pass;
                 String dob;
                 String bal;
+                String mob;
                 
-                System.out.println("Enter Account number: ");
-                ano = sc.next();
                 System.out.println("Enter your name: ");
                 name = sc.next();
                 System.out.println("Enter password: ");
                 pass = sc.next();
+                System.out.println("Enter Mobile No.: ");
+                mob = sc.next();
                 System.out.println("Enter your Date of Birth: ");
                 dob = sc.next();
                 System.out.println("Enter Balance: ");
                 bal = sc.next();
                 
-                PreparedStatement pst = con.prepareStatement("insert into user values(?,?,?,?,?)");
-                
-                pst.setString(1, ano);
-                pst.setString(2, name);
-                pst.setString(3, pass);
-                pst.setString(4, dob);
-                pst.setString(5, bal);
-                
-                pst.executeUpdate();
-                System.out.println("......User Added......");
+                try{
+                    PreparedStatement pst = con.prepareStatement("insert into user(uname,pass,dob,bal,mobile) values(?,?,?,?,?)");
+
+                    pst.setString(1, name);
+                    pst.setString(2, pass);
+                    pst.setString(3, dob);
+                    pst.setString(4, bal);
+                    pst.setString(5, mob);
+
+                    pst.executeUpdate();
+                    System.out.println("......User Added......");
+                    ResultSet r = pst.executeQuery("select accno from user where mobile="+mob+" and uname='"+name+"'");
+                    int a = 0;
+                    while(r.next())
+                        a =r.getInt("accno");
+                 System.out.println("You account number generated is "+a);
+                }
+                catch(MySQLIntegrityConstraintViolationException e){
+                    System.out.println("----------------------\nSorry Account number should be unique..\n----------------------");
+                }
                 adminContinue();
                 break;
                 
@@ -265,6 +286,6 @@ public class BankingManage {
                 else{
                     System.out.println("Please Enter a valid Input");
                 }
-        } 
-    }        
+        }
+    }
 }
