@@ -10,9 +10,7 @@ You have to install the following setup before running-->
     - MySql 5.5
     
 You should create a database and table-->
-    <code>
-        CREATE DATABASE bankmanage;
-        USE bankmanage;
-        CREATE TABLE user VALUES
-        (accno int not null unique auto_increament, uname varchar(25), dob date, pass varchar(25) not null, mobile bigint not null);
-    <code>
+    <code>CREATE DATABASE bankmanage;<code>
+    <code>USE bankmanage;<code>
+        <code>CREATE TABLE user VALUES<code>
+        <code>(accno int not null unique auto_increament, uname varchar(25), dob date, pass varchar(25) not null, mobile bigint not null);<code>
