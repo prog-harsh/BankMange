@@ -1,6 +1,6 @@
 /*
 Programmed&Developed by Harsh Tripathi
-Date = 23/11/2020
+Date = 23/11/2020(Initial release)
 ---------------------------------
 A command Line Banking Management System java application all credit goes to Myself :)
 It uses the mySql database to store and reterive the user data. 
@@ -10,6 +10,9 @@ but please give me credit :)
 **
 
 This is under development
+UPDATED version - 2.5(01/12/2020) 
+    -added admin table
+    -minor bug fix
 You have to install the following setup before running-->
     - JDK 8
     - MySql 5.5
@@ -19,6 +22,7 @@ You should create a database and table
         USE bankmanage;
         CREATE TABLE user VALUES
         (accno int not null unique auto_increament, uname varchar(25), dob date, pass varchar(25) not null, mobile bigint not null);
+        CREATE TABLE admin(id int not null, name varchar(25), pass varchar(25) not null);
     <code>
 */
 
@@ -156,10 +160,17 @@ public class BankingManage {
     }
     private static void adminLogin() throws SQLException{
         System.out.println("------------Admin login--------------");
-        String pass = "admin123";
         
-        System.out.println("\n\nEnter password: ");
+        System.out.println("Enter your ID no.: ");
+        int e_id = sc.nextInt();
+        System.out.println("Enter your password: ");
         String e_pass = sc.next();
+        
+        ResultSet rs = stmt.executeQuery("select pass from admin where id="+e_id);
+        String pass="";
+        while(rs.next()){
+            pass = rs.getString("pass");
+        }
         if(e_pass.equals(pass)){
             adminPanel();
         }
@@ -278,6 +289,7 @@ public class BankingManage {
                             adminLogin();
                             break;
                         case 3:
+                            con.close();
                             return;
                         default:
                             System.out.println("Invalid Input");
