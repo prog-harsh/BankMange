@@ -10,9 +10,9 @@ but please give me credit :)
 **
 
 This is under development
-UPDATED version - 2.5(01/12/2020) 
-    -added admin table
-    -minor bug fix
+UPDATED version - 2.6(01/12/2020) 
+    -added change password & mobile
+    -added clear screen implemented in next update
 You have to install the following setup before running-->
     - JDK 8
     - MySql 5.5
@@ -57,7 +57,9 @@ public class BankingManage {
         System.out.println("2. Withdraw");
         System.out.println("3. Show Previous transaction");
         System.out.println("4. Check Balance");
-        System.out.println("5. Exit");
+        System.out.println("5. Change Password");
+        System.out.println("6. Change Mobile No.");
+        System.out.println("7. Exit");
         
         System.out.println("Enter your choice: ");
             int ch = sc.nextInt();
@@ -86,10 +88,38 @@ public class BankingManage {
                     userContinue();
                     break;
                 case 5:
+                    System.out.println("Enter Your New password: ");
+                    String pass = sc.next();
+                    System.out.println("Are you sure you want to change your password(y/n)");
+                    String sure = sc.next().toLowerCase();
+                    
+                    if(sure.equals("y")){
+                        stmt.executeUpdate("Update user set pass='"+pass+"' where accno="+acc);
+                        System.out.println("Changed...");
+                        userContinue();
+                    }
+                    break;
+                case 6:
+                    System.out.println("Enter Your New Mobile No.: ");
+                    String mob = sc.next();
+                    stmt.executeUpdate("Update user set mobile="+mob+" where accno="+acc);
+                    System.out.println("Changed...");
+                    userContinue();
+                    break;
+                  
+                case 7:
                     return;
                 default:
                     System.out.println("Invalid Input");
             }
+    }
+    private static void clrscr(){
+        try{
+            new ProcessBuilder("cmd","/c","cls").inheritIO().start().waitFor();
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
     }
     private static void userContinue() throws SQLException{
         System.out.println("Do you want to continue(y/n)");
@@ -159,6 +189,7 @@ public class BankingManage {
         }
     }
     private static void adminLogin() throws SQLException{
+        //clrscr();
         System.out.println("------------Admin login--------------");
         
         System.out.println("Enter your ID no.: ");
@@ -191,7 +222,8 @@ public class BankingManage {
         System.out.println("1. Add User");
         System.out.println("2. Remove User");
         System.out.println("3. List of all user");
-        System.out.println("4. Exit");
+        System.out.println("4. Remove all User");
+        System.out.println("5. Exit");
         
         System.out.println("Enter your choice: ");
         int ch = sc.nextInt();
@@ -258,8 +290,12 @@ public class BankingManage {
                 }
                 adminContinue();
                 break;
-            
             case 4:
+                stmt.executeUpdate("Truncate user");
+                System.out.println("Done...");
+                adminContinue();
+                break;
+            case 5:
                 return;
             default:
                 System.out.println("Invalid Input");
